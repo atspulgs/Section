@@ -2,24 +2,33 @@
  * Author:  Atspulgs
  * Version: 0.1
  * -----------------------------------------------------------------------------
+ * Tested on the follwoing browsers:
+ * ! Chrome - Fully supported
+ * ! Firefox - Fully supported
+ * ! IE 11 - Fully supported
+ * ! Edge - Fully supported
+ * ! Maxthon - Fully supported
  * --- Features ----------------------------------------------------------------
  * ! Formats Sections (HTML + styles) - DONE
- * ! Javascript based Hover efect for the title - IN PROGRESS
+ * ! Javascript based Hover efect for the title - DONE
  * ! Option to start expanded or collapsed - DONE
  * ! Collapses and Expands upon triggering click event on the title - DONE
  * ! Animate the collapse and expansion - DONE
+ * ! Add IE 11 Support - DONE
+ * ! Add support for Edge - DONE
  * --- Notes -------------------------------------------------------------------
  * animationState = open/closed
+ * My default I have disabled the user select on the title.
  * --- Changelog ---------------------------------------------------------------
- * 
+ * 15/01/2017 - innitial release of the code.
  * --- To Do -------------------------------------------------------------------
- * !Fix the text highlighting when clicking.
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
  * !Write up a guide in github.
  * !Consider doing something about any extra content added to the section.
+ * !Add an optional button to disable user select on the title. (on the fly)
  * --- Formatting --------------------------------------------------------------
- * <div class="_section">
+ * <div class="_section">.
  *     <div class="_section_title">Section Title</div>
  *     <div class="_section_content">Content</div>
  * </div>
@@ -35,7 +44,8 @@ function Section() {
     this.animation_timer_delay  = 10;
     this.animation_timer_chunks = 20;
     this.title_bg_default       = "rgba(255,255,255,1.0)";
-    this.title_bg_hover         = "rgba(255,0,255,1.0)";
+    this.title_bg_hover         = "rgba(240,240,240,1.0)";
+    this.user_select            = true;
     
     //Making sure the DOM has loaded.
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -45,11 +55,16 @@ function Section() {
     }.bind(this));
     
     //Methods
-    // Formats and adjusts the page to abide by the required format
+    /**
+     ** This is really the only method you must call. It will be also called upon instantiation.
+     ** This method looks for divs that should be turned into sections and formats them.
+     ** It also adds the required listeners and elements for it to work.
+    **/
     this.generate               = function() {
         var sections = document.querySelectorAll('div[class~="_section"]');
         if(sections)
-            sections.forEach(function(element) {
+            for(var i = 0; i < sections.length; ++i) {
+                var element = sections[i];
                 if(element.touched) return;
                 var title   = element.querySelector('div[class~=_section_title]');
                 var content = element.querySelector('div[class~=_section_content]');
@@ -83,6 +98,11 @@ function Section() {
                 element.style.overflow = "hidden";
                 title.style.backgroundColor = this.title_bg_default;
                 title.style.cursor = "pointer";
+                if(this.user_select) {
+                    title.style.userSelect = "none";
+                    title.style.MozUserSelect = "none";
+                    title.style.WebkitUserSelect = "none";
+                }
                 
                 if(this.title_hover) {
                     title.addEventListener("mouseover", onOver.bind(this));
@@ -101,7 +121,7 @@ function Section() {
                 }
                 
                 element.touched = true;
-            }, this);
+            }
     };
     
     function onClick(e) {
@@ -169,6 +189,12 @@ function Section() {
             return true;
         } else return false;
     };
+    this.setTitleUserSelect     = function(enable) {
+        if(enable instanceof Boolean) {
+            this.user_select = enable;
+            return true;
+        } else return false;
+    };
     this.setStartingClosed      = function(enable) {
         if(enable instanceof Boolean) {
             this.start_closed = enable;
@@ -187,7 +213,6 @@ function Section() {
             return true;
         } else return false;
     };
-    // Timer delay cannot go lower than 10 miliseconds.
     this.setTimerDelay          = function(delay) {
         if(delay instanceof Number) {
             if(delay < 10) delay = 10;
@@ -195,8 +220,6 @@ function Section() {
             return true;
         } else return false;
     };
-    // Timer chunks (iterations) of the animation.
-    // Should there be a maximum????
     this.setTimerChunks         = function(chunks) {
         if(chunks instanceof Number) {
             if(chunks < 1) chunks = 1;
@@ -236,6 +259,9 @@ function Section() {
     //Getters
     this.getDefaultTitle        = function() {
         return this.default_title;
+    };
+    this.getTitleUserSelect     = function() {
+        return this.user_select;
     };
     this.getStartingClosed      = function() {
         return this.start_closed;
