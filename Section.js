@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.1
+ * Version: 0.2
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -21,6 +21,10 @@
  * My default I have disabled the user select on the title.
  * --- Changelog ---------------------------------------------------------------
  * 15/01/2017 - innitial release of the code.
+ * 16/01/2017 - Changed from forEach to for loop as its better supported across browsers
+ *            - Fixed the setters, none fo them worked cause I used instance of rather than typeof
+ *            - Added to more setters, they still need to be worked on but they provide more power as they are.
+ *            - Changed the Default background from white to inherit.
  * --- To Do -------------------------------------------------------------------
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
@@ -43,7 +47,7 @@ function Section() {
     this.animate                = true;
     this.animation_timer_delay  = 10;
     this.animation_timer_chunks = 20;
-    this.title_bg_default       = "rgba(255,255,255,1.0)";
+    this.title_bg_default       = "inherit";
     this.title_bg_hover         = "rgba(240,240,240,1.0)";
     this.user_select            = true;
     
@@ -184,51 +188,51 @@ function Section() {
     
     //Setters
     this.setDefaultTitle        = function(title) {
-        if(title instanceof String) {
+        if(typeof title === "string") {
             this.default_title = title;
             return true;
         } else return false;
     };
     this.setTitleUserSelect     = function(enable) {
-        if(enable instanceof Boolean) {
+        if(typeof enable === "boolean") {
             this.user_select = enable;
             return true;
         } else return false;
     };
     this.setStartingClosed      = function(enable) {
-        if(enable instanceof Boolean) {
+        if(typeof enable === "boolean") {
             this.start_closed = enable;
             return true;
         } else return false;
     };
     this.setHover               = function(enable) {
-        if(enable instanceof Boolean) {
+        if(typeof enable === "boolean") {
             this.title_hover = enable;
             return true;
         } else return false;
     };
     this.setAnimation           = function(enable) {
-        if(enable instanceof Boolean) {
+        if(typeof enable === "boolean") {
             this.animate = enable;
             return true;
         } else return false;
     };
     this.setTimerDelay          = function(delay) {
-        if(delay instanceof Number) {
+        if(typeof delay === "number") {
             if(delay < 10) delay = 10;
             this.animation_timer_delay = delay;
             return true;
         } else return false;
     };
     this.setTimerChunks         = function(chunks) {
-        if(chunks instanceof Number) {
+        if(typeof chunks === "number") {
             if(chunks < 1) chunks = 1;
             this.animation_timer_chunks = chunks;
             return true;
         } else return false;
     };
-    this.setTitleDefaultBG      = function(red, green, blue, alpha) {
-        if(red instanceof Number && green instanceof Number && blue instanceof blue && alpha instanceof alpha) {
+    this.setTitleDefaultBGinRGBA = function(red, green, blue, alpha) {
+        if(typeof red === "number" && typeof green === "number" && typeof blue === "number" && typeof alpha === "number") {
             if(red > 255)       red     = 255;
             else if(red < 0)    red     = 0;
             if(green > 255)     green   = 255;
@@ -241,8 +245,8 @@ function Section() {
             return true;
         } else return false;
     };
-    this.setTitleHoverBG        = function(red, green, blue, alpha) {
-        if(red instanceof Number && green instanceof Number && blue instanceof blue && alpha instanceof alpha) {
+    this.setTitleHoverBGinRGBA   = function(red, green, blue, alpha) {
+        if(typeof red === "number" && typeof green === "number" && typeof blue === "number" && typeof alpha === "number") {
             if(red > 255)       red     = 255;
             else if(red < 0)    red     = 0;
             if(green > 255)     green   = 255;
@@ -254,6 +258,15 @@ function Section() {
             this.title_bg_hover = "rgba("+red+","+green+","+blue+","+alpha+")";
             return true;
         } else return false;
+    };
+    //consider parse function...
+    this.setTitleDefaultBG      = function(value) {
+        //Still need checks here for RGBA, RGB, keywords as well as colors and hashes
+        this.title_bg_hover = value;
+    };
+    this.setTitleHoverBG        = function(value) {
+        //Still need checks here for RGBA, RGB, keywords as well as colors and hashes
+        this.title_bg_hover = value;
     };
     
     //Getters
