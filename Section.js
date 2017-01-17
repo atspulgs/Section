@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.2
+ * Version: 0.3
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -25,6 +25,7 @@
  *            - Fixed the setters, none fo them worked cause I used instance of rather than typeof
  *            - Added to more setters, they still need to be worked on but they provide more power as they are.
  *            - Changed the Default background from white to inherit.
+ * 17/01/2017 - Fixed an issue found in FF 45 ESR. Reference error.
  * --- To Do -------------------------------------------------------------------
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
@@ -158,8 +159,7 @@ function Section() {
                 console.err("Section is in an unexpected state: "+section.animationState);
                 return;
             }
-            section.animationId = setInterval(frame, this.animation_timer_delay);
-            function frame() {
+            section.animationId = setInterval(function () {
                 if(section.animationState === "open" && start >= end) {
                     start = end;
                     clearInterval(section.animationId);
@@ -172,7 +172,7 @@ function Section() {
                     start += chunk_size;
                 }
                 section.style.height = start+"px";
-            }
+            }, this.animation_timer_delay);
         } else {
             if(section_h > title_h)
                 section.style.height = title_h+"px";
