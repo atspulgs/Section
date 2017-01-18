@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.3
+ * Version: 0.4
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -26,6 +26,10 @@
  *            - Added to more setters, they still need to be worked on but they provide more power as they are.
  *            - Changed the Default background from white to inherit.
  * 17/01/2017 - Fixed an issue found in FF 45 ESR. Reference error.
+ * 18/01/2017 - Added a method for updating the document with new sections if they were added afterwards.
+ *            - Added the option to not auto generate the sections.
+ *            - Adjusted one of the methods to now force generate. Regens previosuly generated code.
+ *            - Made sure that no lingering content can be added.
  * --- To Do -------------------------------------------------------------------
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
@@ -40,7 +44,7 @@
  * ---------------------------------------------------------------------------*/
 
 
-function Section() {
+function Section(auto = true) {
     //Properties
     this.default_title          = "Section";
     this.start_closed           = true;
@@ -53,7 +57,7 @@ function Section() {
     this.user_select            = true;
     
     //Making sure the DOM has loaded.
-    document.addEventListener("DOMContentLoaded", function(event) {
+    if(auto) document.addEventListener("DOMContentLoaded", function(event) {
         if(event) {
             this.generate();
         }
@@ -61,16 +65,16 @@ function Section() {
     
     //Methods
     /**
-     ** This is really the only method you must call. It will be also called upon instantiation.
-     ** This method looks for divs that should be turned into sections and formats them.
-     ** It also adds the required listeners and elements for it to work.
-    **/
-    this.generate               = function() {
+     * Force generates and formats the sections.
+     * @param {type} force
+     * @returns {undefined}
+     */
+    this.generate               = function(force = true) {
         var sections = document.querySelectorAll('div[class~="_section"]');
         if(sections)
             for(var i = 0; i < sections.length; ++i) {
                 var element = sections[i];
-                if(element.touched) return;
+                if(element.touched && !force) return;
                 var title   = element.querySelector('div[class~=_section_title]');
                 var content = element.querySelector('div[class~=_section_content]');
                 if(title && !content) {
@@ -85,7 +89,10 @@ function Section() {
                     title = document.createElement('div');
                     title.className = "_section_title";
                     title.innerHTML = this.default_title;
-                    element.insertBefore(content);
+                    content = element.removeChild(content);
+                    element.innerHTML = "";
+                    element.appendChild(title);
+                    element.appendChild(content);
                 } else if(!title && !content) {
                     content = document.createElement('div');
                     title = document.createElement('div');
@@ -127,6 +134,15 @@ function Section() {
                 
                 element.touched = true;
             }
+    };
+    
+    /**
+     * Updates the content. In other words, if new section divs are added they can be
+     * modded in with this without regenerating the whole set of sections. 
+     * @returns {undefined}
+     */
+    this.update                 = function() {
+        this.generate(false);
     };
     
     function onClick(e) {
