@@ -69,7 +69,7 @@ function Section(auto = true) {
      * @param {type} force
      * @returns {undefined}
      */
-    this.generate               = function(force = true) {
+    this.generate = function(force = true) {
         var sections = document.querySelectorAll('div[class~="_section"]');
         if(sections)
             for(var i = 0; i < sections.length; ++i) {
@@ -141,7 +141,7 @@ function Section(auto = true) {
      * modded in with this without regenerating the whole set of sections. 
      * @returns {undefined}
      */
-    this.update                 = function() {
+    this.update = function() {
         this.generate(false);
     };
     
@@ -203,44 +203,44 @@ function Section(auto = true) {
     }
     
     //Setters
-    this.setDefaultTitle        = function(title) {
+    this.setDefaultTitle = function(title) {
         if(typeof title === "string") {
             this.default_title = title;
             return true;
         } else return false;
     };
-    this.setTitleUserSelect     = function(enable) {
+    this.setTitleUserSelect = function(enable) {
         if(typeof enable === "boolean") {
             this.user_select = enable;
             return true;
         } else return false;
     };
-    this.setStartingClosed      = function(enable) {
+    this.setStartingClosed = function(enable) {
         if(typeof enable === "boolean") {
             this.start_closed = enable;
             return true;
         } else return false;
     };
-    this.setHover               = function(enable) {
+    this.setHover = function(enable) {
         if(typeof enable === "boolean") {
             this.title_hover = enable;
             return true;
         } else return false;
     };
-    this.setAnimation           = function(enable) {
+    this.setAnimation = function(enable) {
         if(typeof enable === "boolean") {
             this.animate = enable;
             return true;
         } else return false;
     };
-    this.setTimerDelay          = function(delay) {
+    this.setTimerDelay = function(delay) {
         if(typeof delay === "number") {
             if(delay < 10) delay = 10;
             this.animation_timer_delay = delay;
             return true;
         } else return false;
     };
-    this.setTimerChunks         = function(chunks) {
+    this.setTimerChunks = function(chunks) {
         if(typeof chunks === "number") {
             if(chunks < 1) chunks = 1;
             this.animation_timer_chunks = chunks;
@@ -261,7 +261,7 @@ function Section(auto = true) {
             return true;
         } else return false;
     };
-    this.setTitleHoverBGinRGBA   = function(red, green, blue, alpha) {
+    this.setTitleHoverBGinRGBA = function(red, green, blue, alpha) {
         if(typeof red === "number" && typeof green === "number" && typeof blue === "number" && typeof alpha === "number") {
             if(red > 255)       red     = 255;
             else if(red < 0)    red     = 0;
@@ -276,41 +276,74 @@ function Section(auto = true) {
         } else return false;
     };
     //consider parse function...
-    this.setTitleDefaultBG      = function(value) {
+    this.namedColor = ["transparent","aliceblue","antiquewhite","aqua","aquamarine",
+        "azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown",
+        "burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue",
+        "cornsilk","crimson","cyan","darkblue","darkcyan","darkgoldenrod","darkgray",
+        "darkgreen","darkgrey","darkkhaki","darkmagenta","darkolivegreen","darkorange",
+        "darkorchid","darkred","darksalmon","darkseagreen","darkslateblue",
+        "darkslategray","darkslategrey","darkturquoise","darkviolet","deeppink",
+        "deepskyblue","dimgray","dimgrey","dodgerblue","firebrick","floralwhite",
+        "forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray",
+        "green","greenyellow","grey","honeydew","hotpink","indianred","indigo","ivory",
+        "khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue",
+        "lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgreen",
+        "lightgrey","lightpink","lightsalmon","lightseagreen","lightskyblue",
+        "lightslategray","lightslategrey","lightsteelblue","lightyellow","lime",
+        "limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue",
+        "mediumorchid","mediumpurple","mediumseagreen","mediumslateblue",
+        "mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue",
+        "mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive",
+        "olivedrab","orange","orangered","orchid","palegoldenrod","palegreen",
+        "paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum",
+        "powderblue","purple","rebeccapurple","red","rosybrown","royalblue",
+        "saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver",
+        "skyblue","slateblue","slategray","slategrey","snow","springgreen","steelblue",
+        "tan","teal","thistle","tomato","turquoise","violet","wheat","white",
+        "whitesmoke","yellow","yellowgreen"];
+    
+    this.depricatedSystemColor = ["ActiveBorder","ActiveCaption","AppWorkspace",
+        "Background","ButtonFace","ButtonHighlight","ButtonShadow","ButtonText",
+        "CaptionText","GrayText","Highlight","HighlightText","InactiveBorder",
+        "InactiveCaption","InactiveCaptionText","InfoBackground","InfoText","Menu",
+        "MenuText","Scrollbar","ThreeDDarkShadow","ThreeDFace","ThreeDHighlight",
+        "ThreeDLightShadow","ThreeDShadow","Window","WindowFrame","WindowText"];
+    
+    this.setTitleDefaultBG = function(value) {
         //Still need checks here for RGBA, RGB, keywords as well as colors and hashes
         this.title_bg_hover = value;
     };
-    this.setTitleHoverBG        = function(value) {
+    this.setTitleHoverBG = function(value) {
         //Still need checks here for RGBA, RGB, keywords as well as colors and hashes
         this.title_bg_hover = value;
     };
     
     //Getters
-    this.getDefaultTitle        = function() {
+    this.getDefaultTitle = function() {
         return this.default_title;
     };
-    this.getTitleUserSelect     = function() {
+    this.getTitleUserSelect = function() {
         return this.user_select;
     };
-    this.getStartingClosed      = function() {
+    this.getStartingClosed = function() {
         return this.start_closed;
     };
-    this.getHover               = function() {
+    this.getHover = function() {
         return this.title_hover;
     };
-    this.getAnimation           = function() {
+    this.getAnimation = function() {
         return this.animate;
     };
-    this.getTimerDelay          = function() {
+    this.getTimerDelay = function() {
         return this.animation_timer_delay;
     };
-    this.getTimerChunks         = function() {
+    this.getTimerChunks = function() {
         return this.animation_timer_chunks;
     };
-    this.getDefaultBG           = function() {
+    this.getDefaultBG = function() {
         return this.title_bg_default;
     };
-    this.getHoverBG             = function() {
+    this.getHoverBG = function() {
         return this.title_bg_hover;
     };
 };
