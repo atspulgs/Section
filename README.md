@@ -32,7 +32,7 @@ You have the following options that you can change for the script itself.
 ### Constructors
 The construction of the Object can be achieved in a couple of ways.
 1. default construction: `new Section()`
-2. manual formatting construction: `new Section(true);`
+2. manual formatting construction: `new Section(false);`
 
 ### Properties
 Although I do not recommend doing this, you have the access to the objects parameters directly as I did not take the effort to hide them. I don't believe its necessary to do so for properties.
