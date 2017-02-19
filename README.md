@@ -32,7 +32,7 @@ You have the following options that you can change for the script itself.
 ### Constructors
 The construction of the Object can be achieved in a couple of ways.
 1. default construction: `new Section()`
-2. manual formatting construction: `new Section(true);`
+2. manual formatting construction: `new Section(false);`
 
 ### Properties
 Although I do not recommend doing this, you have the access to the objects parameters directly as I did not take the effort to hide them. I don't believe its necessary to do so for properties.
@@ -56,7 +56,7 @@ This specifies how often an animation frame will be called. It is defaulted to 1
 Timer chunks are the amount of frames the animation will try to use. This should not be lower than 1. It will max out at the heights pixel count. This is also a property you should not change directly. Please use a setter.
 * section.title_bg_default = "inherit"
 
-This property will change the initial title background color. By default it will inherit its parents. I recommend using the setters. _Note that one of the setters is a placeholder for now. It essentially functions as if you were to assign the property directly._
+This property will change the initial title background color. By default it will inherit its parents. I recommend using the setters.
 * section.title_bg_hover = "rgba(240,240,240,1.0)"
 
 This property is the same as title_bg_default with the exception that it will be applied upon :hover.
