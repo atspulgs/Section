@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.4
+ * Version: 0.4.1
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -34,7 +34,6 @@
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
  * !Write up a guide in github.
- * !Consider doing something about any extra content added to the section.
  * !Add an optional button to disable user select on the title. (on the fly)
  * --- Formatting --------------------------------------------------------------
  * <div class="_section">.
@@ -55,6 +54,7 @@ function Section(auto = true) {
     this.title_bg_default       = "inherit";
     this.title_bg_hover         = "rgba(240,240,240,1.0)";
     this.user_select            = true;
+    this.user_selector          = true;
     
     //Making sure the DOM has loaded.
     if(auto) document.addEventListener("DOMContentLoaded", function(event) {
@@ -146,6 +146,7 @@ function Section(auto = true) {
     };
     
     function onClick(e) {
+        if(!e.target.classList.contains("_section_title")) return;
         var title = e.target;
         var section = title.parentNode;
         if(section.animationState === "open")
@@ -196,10 +197,12 @@ function Section(auto = true) {
         }
     }
     function onOver(e) {
-        e.target.style.backgroundColor = this.title_bg_hover;
+        if(e.target.classList.contains("_section_title"))
+            e.target.style.backgroundColor = this.title_bg_hover;
     }
     function onOut(e) {
-        e.target.style.backgroundColor = this.title_bg_default;
+        if(e.target.classList.contains("_section_title"))
+            e.target.style.backgroundColor = this.title_bg_default;
     }
     
     //Setters
@@ -276,39 +279,6 @@ function Section(auto = true) {
         } else return false;
     };
     //consider parse function...
-    this.namedColor = ["transparent","aliceblue","antiquewhite","aqua","aquamarine",
-        "azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown",
-        "burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue",
-        "cornsilk","crimson","cyan","darkblue","darkcyan","darkgoldenrod","darkgray",
-        "darkgreen","darkgrey","darkkhaki","darkmagenta","darkolivegreen","darkorange",
-        "darkorchid","darkred","darksalmon","darkseagreen","darkslateblue",
-        "darkslategray","darkslategrey","darkturquoise","darkviolet","deeppink",
-        "deepskyblue","dimgray","dimgrey","dodgerblue","firebrick","floralwhite",
-        "forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray",
-        "green","greenyellow","grey","honeydew","hotpink","indianred","indigo","ivory",
-        "khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue",
-        "lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgreen",
-        "lightgrey","lightpink","lightsalmon","lightseagreen","lightskyblue",
-        "lightslategray","lightslategrey","lightsteelblue","lightyellow","lime",
-        "limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue",
-        "mediumorchid","mediumpurple","mediumseagreen","mediumslateblue",
-        "mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue",
-        "mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive",
-        "olivedrab","orange","orangered","orchid","palegoldenrod","palegreen",
-        "paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum",
-        "powderblue","purple","rebeccapurple","red","rosybrown","royalblue",
-        "saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver",
-        "skyblue","slateblue","slategray","slategrey","snow","springgreen","steelblue",
-        "tan","teal","thistle","tomato","turquoise","violet","wheat","white",
-        "whitesmoke","yellow","yellowgreen"];
-    
-    this.depricatedSystemColor = ["ActiveBorder","ActiveCaption","AppWorkspace",
-        "Background","ButtonFace","ButtonHighlight","ButtonShadow","ButtonText",
-        "CaptionText","GrayText","Highlight","HighlightText","InactiveBorder",
-        "InactiveCaption","InactiveCaptionText","InfoBackground","InfoText","Menu",
-        "MenuText","Scrollbar","ThreeDDarkShadow","ThreeDFace","ThreeDHighlight",
-        "ThreeDLightShadow","ThreeDShadow","Window","WindowFrame","WindowText"];
-    
     this.setTitleDefaultBG = function(value) {
         //Still need checks here for RGBA, RGB, keywords as well as colors and hashes
         this.title_bg_hover = value;
