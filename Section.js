@@ -1,6 +1,6 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.4.1
+ * Version: 0.5
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -16,35 +16,48 @@
  * ! Animate the collapse and expansion - DONE
  * ! Add IE 11 Support - DONE
  * ! Add support for Edge - DONE
+ * ! Profile functionality - DONE
  * --- Notes -------------------------------------------------------------------
  * animationState = open/closed
  * My default I have disabled the user select on the title.
+ * 
+ * Using the following unique attribute for profiles.
+ * data-section-profile="profileName"
  * --- Changelog ---------------------------------------------------------------
  * 15/01/2017 - innitial release of the code.
  * 16/01/2017 - Changed from forEach to for loop as its better supported across browsers
- *            - Fixed the setters, none fo them worked cause I used instance of rather than typeof
+ *            - Fixed the setters, none fo them worked cause I used instance of rather than typeof. Issue #1 https://github.com/atspulgs/Section/issues/1
  *            - Added to more setters, they still need to be worked on but they provide more power as they are.
  *            - Changed the Default background from white to inherit.
- * 17/01/2017 - Fixed an issue found in FF 45 ESR. Reference error.
+ * 17/01/2017 - Fixed an issue found in FF 45 ESR. Reference error. Issue #2 https://github.com/atspulgs/Section/issues/2
  * 18/01/2017 - Added a method for updating the document with new sections if they were added afterwards.
  *            - Added the option to not auto generate the sections.
  *            - Adjusted one of the methods to now force generate. Regens previosuly generated code.
  *            - Made sure that no lingering content can be added.
+ * 16/03/2017 - Fulfilled Issue #3 https://github.com/atspulgs/Section/issues/3
+ *            - Fulfilled Issue #4 https://github.com/atspulgs/Section/issues/4
+ *            - Fulfilled Issue #5 https://github.com/atspulgs/Section/issues/5
  * --- To Do -------------------------------------------------------------------
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
- * !Write up a guide in github.
  * !Add an optional button to disable user select on the title. (on the fly)
  * --- Formatting --------------------------------------------------------------
- * <div class="_section">.
+ * <div class="_section" >.
+ *     <div class="_section_title">Section Title</div>
+ *     <div class="_section_content">Content</div>
+ * </div>
+ * 
+ * OR
+ * <div class="_section" data-section-profile="profileName">.
  *     <div class="_section_title">Section Title</div>
  *     <div class="_section_content">Content</div>
  * </div>
  * ---------------------------------------------------------------------------*/
 
 
-function Section(auto = true) {
+function Section(profile_name = null, auto = true) {
     //Properties
+    this.profile_name           = profile_name;
     this.default_title          = "Section";
     this.start_closed           = true;
     this.title_hover            = true;
@@ -70,12 +83,15 @@ function Section(auto = true) {
      * @returns {undefined}
      */
     this.generate = function(force = true) {
-        var sections = document.querySelectorAll('div[class~="_section"]');
+        var sections = this.profile_name === null?
+            document.querySelectorAll('[class~="_section"]'):
+            document.querySelectorAll('[class~="_section"][data-section-profile="'+this.profile_name+'"]');
         if(sections)
             for(var i = 0; i < sections.length; ++i) {
                 var element = sections[i];
-                if(element.touched && !force) return;
-                var title   = element.querySelector('div[class~=_section_title]');
+                if(this.profile_name === null && element.hasAttribute('data-section-profile')) continue;
+                if(element.touched && !force) continue;
+                var title   = element.querySelector('[class~=_section_title]');
                 var content = element.querySelector('div[class~=_section_content]');
                 if(title && !content) {
                     title = element.removeChild(title);
@@ -104,6 +120,8 @@ function Section(auto = true) {
                     element.appendChild(title);
                     element.appendChild(content);
                 }
+                
+                content.style.padding = "1px";
                 
                 element.animationState = "open";
                 
