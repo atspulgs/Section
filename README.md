@@ -6,7 +6,7 @@
 
 _Ideally you want to have the following formatting to begin with._
 
-    <div class="_section">
+    <div class="_section" data-section-profile="profileName">
       <div class="_section_title">Section Title</div>
       <div class="_section_content">This is the text within the section</div>
     </div>
