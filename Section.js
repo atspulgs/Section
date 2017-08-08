@@ -1,6 +1,5 @@
 /* -----------------------------------------------------------------------------
  * Author:  Atspulgs
- * Version: 0.5
  * -----------------------------------------------------------------------------
  * Tested on the follwoing browsers:
  * ! Chrome - Fully supported
@@ -37,6 +36,7 @@
  * 16/03/2017 - Fulfilled Issue #3 https://github.com/atspulgs/Section/issues/3
  *            - Fulfilled Issue #4 https://github.com/atspulgs/Section/issues/4
  *            - Fulfilled Issue #5 https://github.com/atspulgs/Section/issues/5
+ * 08/08/2017 - Fulfilled Issue #7 https://github.com/atspulgs/Section/issues/7 (enhancement notes: data-section-state="open|closed")
  * --- To Do -------------------------------------------------------------------
  * !Write up comments for the thing.
  * !Write a couple a styles as something to add optionally.
@@ -48,7 +48,7 @@
  * </div>
  * 
  * OR
- * <div class="_section" data-section-profile="profileName">.
+ * <div class="_section" data-section-profile="profileName" data-section-state="open|closed">.
  *     <div class="_section_title">Section Title</div>
  *     <div class="_section_content">Content</div>
  * </div>
@@ -140,8 +140,14 @@ function Section(profile_name = null, auto = true) {
                 }
                 
                 title.addEventListener("click", onClick.bind(this));
-                
-                if(this.start_closed) {
+                var state = element.hasAttribute("data-section-state")?
+                    ( element.getAttribute("data-section-state") === "open"?
+                        false
+                        : ( element.getAttribute("data-section-state") === "closed"?
+                            true
+                            : this.start_closed ))
+                        : this.start_closed;
+                if(state) {
                     var an = this.animate?true:false;
                     if(an)
                         this.animate = false;
